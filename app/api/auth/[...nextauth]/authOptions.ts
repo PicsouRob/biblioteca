@@ -5,7 +5,6 @@ import bcrypt from "bcrypt";
 
 import { prisma } from "@/libs/prisma.config";
 import { signJwt } from "@/libs/jsonWebToken";
-import { NextResponse } from "next/server";
 
 export const authOptions: NextAuthOptions = {
     pages: {
@@ -61,11 +60,7 @@ export const authOptions: NextAuthOptions = {
                         password, ...userWithoutPassword
                     } = user;
 
-                    return NextResponse.json(JSON.stringify({
-                        message: "Loggeado exitosamente",
-                        user: userWithoutPassword,
-                        jwtUserId
-                    }), {status: 500 });
+                    return { ...userWithoutPassword, jwtUserId };
                 } catch (error: any) {
                     console.log(`${error.message}`);
                     throw new Error(error.message);

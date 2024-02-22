@@ -68,7 +68,7 @@ const Home: React.FC = () => {
                                 bg-orange-900
                                 border border-transparent
                                 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-white
-                                hover:bg-primary/80
+                                hover:bg-orange-800
                             "
                 >
                   Buscar

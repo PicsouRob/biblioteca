@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import Link from "next/link";
 import { Bars3Icon, ChevronRightIcon } from "@heroicons/react/24/outline";
@@ -6,14 +6,18 @@ import { Bars3Icon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { useShowContent } from "@/hooks/useShowContent";
 import Logo from "./Logo";
 import NavBarLink from "./NavBarLink";
+import { useSession } from "next-auth/react";
+import { UserIcon } from "@heroicons/react/24/outline";
 
 const Header: React.FC = () => {
     const show: boolean = useShowContent();
+    const { data }: any = useSession();
+    console.log(data);
 
     return (
         <div className="">
             {show && (
-                <header className="relative bg-white">
+                <header className="relative bg-white border-b">
                     <div className="relative px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
                         <div className="flex items-center justify-between h-16 lg:h-[72px]">
                             <div className="flex items-center flex-shrink-0 ">
@@ -29,9 +33,17 @@ const Header: React.FC = () => {
                             </div>
 
                             <div className="flex items-center gap-4">
-                                <Link href="/signin" className="text-sm py-2 px-2 md:px-4 cursor-pointer border-2 border-primary rounded-md text-primary transition-all duration-200 hover:opacity-90">
+                                {data?.user ? (
+                                    <Link href={`/profile/${data.user?.id!}`} className="flex items-center gap-2 text-sm py-2 px-2 md:px-4 cursor-pointer border-2 border-primary rounded-md text-primary transition-all duration-200 hover:opacity-90">
+                                        <UserIcon className="h-5 w-5 text-primary" />
+
+                                        <p className="">Mi cuenta</p>
+                                    </Link>
+                                ) : (
+                                    <Link href="/signin" className="text-sm py-2 px-2 md:px-4 cursor-pointer border-2 border-primary rounded-md text-primary transition-all duration-200 hover:opacity-90">
                                     Iniciar Session
                                 </Link>
+                                )}
 
                                 <div className="">
                                     <div className="drawer flex lg:hidden">
