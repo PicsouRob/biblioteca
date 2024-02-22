@@ -40,11 +40,11 @@ const Register: React.FC = () => {
         }
     }, []);
     
-    // useEffect(() => {
-    //     if(session?.user) {
-    //         router.push("/");
-    //     }
-    // }, [session?.user, router]);
+    useEffect(() => {
+        if(session?.user) {
+            router.push("/");
+        }
+    }, [session?.user, router]);
 
     useEffect(() => {
         document.addEventListener('keypress', keyPress);

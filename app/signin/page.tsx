@@ -37,11 +37,11 @@ const SignIn: React.FC = () => {
         }
     }, []);
     
-    // useEffect(() => {
-    //     if(session?.user) {
-    //         router.push("/");
-    //     }
-    // }, [session?.user, router]);
+    useEffect(() => {
+        if(session?.user) {
+            router.push("/");
+        }
+    }, [session?.user, router]);
 
     useEffect(() => {
         document.addEventListener('keypress', keyPress);
@@ -61,7 +61,7 @@ const SignIn: React.FC = () => {
             if(login?.ok) {
                 toast.success("Has conectado exitosamente.", { duration: 2 });
 
-                router.refresh();
+                window.location.reload();
                 router.push("/");
             } else {
                 setError(`${login?.error}`);
