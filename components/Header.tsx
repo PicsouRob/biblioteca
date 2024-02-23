@@ -25,11 +25,11 @@ const Header: React.FC = () => {
                             </div>
 
                             <div className="hidden lg:flex lg:items-center lg:ml-16 xl:ml-24 lg:space-x-8">
-                                <NavBarLink text="Inicio" />
-                                <NavBarLink text="Catalogo" />
-                                <NavBarLink text="Buscar libros" />
-                                <NavBarLink text="Acerca de" />
-                                <NavBarLink text="Contacto" />
+                                <NavBarLink link="/" text="Inicio" />
+                                <NavBarLink link="/" text="Catalogo" />
+                                <NavBarLink link="/search" text="Buscar libros" />
+                                <NavBarLink link="/about" text="Acerca de" />
+                                <NavBarLink link="/contact" text="Contacto" />
                             </div>
 
                             <div className="flex items-center gap-4">

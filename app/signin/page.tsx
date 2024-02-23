@@ -16,6 +16,7 @@ import Link from "next/link";
 import SignLeftInfo from "@/components/SignLeftInfo";
 import Logo from "@/components/Logo";
 import Error from "@/components/Error";
+import ConnectWithGoogle from "@/components/ConnectWithGoogle";
 
 const validation = Yup.object().shape({
     email: Yup.string().email('El correo es incorrecto!')
@@ -38,7 +39,8 @@ const SignIn: React.FC = () => {
     }, []);
     
     useEffect(() => {
-        if(session?.user) {
+        if (session?.user) {
+            window.location.reload();
             router.push("/");
         }
     }, [session?.user, router]);
@@ -113,6 +115,8 @@ const SignIn: React.FC = () => {
                     <h2 className="text-3xl font-bold leading-tight text-primary sm:text-4xl">Bienvenido</h2>
                     <p className="mt-2 text-base text-gray-600">No tienes cuenta? <Link href="/register" title="" className="font-medium text-blue-600 transition-all duration-200 hover:text-blue-700 focus:text-blue-700 hover:underline">Crear una cuenta</Link></p>
 
+                    <ConnectWithGoogle />
+
                     <Formik
                         initialValues={{ email: '', password: '' }}
                         validationSchema={validation}
@@ -120,7 +124,7 @@ const SignIn: React.FC = () => {
                         innerRef={formRef}
                     >
                         {({ values, errors, handleSubmit, handleChange, touched }) => (
-                            <form onSubmit={handleSubmit} className="mt-8">
+                            <form onSubmit={handleSubmit} className="mt-5">
                                 {error && <Error text={error} />}
                                 <div className="space-y-5">
                                     <div>
@@ -139,7 +143,7 @@ const SignIn: React.FC = () => {
                                                 value={values.email}
                                                 id=""
                                                 placeholder="Entra tu correo"
-                                                className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                                                className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-100 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
                                             />
                                         </div>
 
@@ -175,7 +179,7 @@ const SignIn: React.FC = () => {
                                                 name="password"
                                                 id=""
                                                 placeholder="Entra tu contraseña"
-                                                className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                                                className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-100 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
                                             />
                                         </div>
 

@@ -1,10 +1,12 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProviders from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import bcrypt from "bcrypt";
 
 import { prisma } from "@/libs/prisma.config";
 import { signJwt } from "@/libs/jsonWebToken";
+import { NextResponse } from "next/server";
 
 export const authOptions: NextAuthOptions = {
     pages: {
@@ -29,7 +31,7 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials: any): Promise<any> {
                 try {
-                    if(!credentials.email || !credentials.password) {
+                    if (!credentials.email || !credentials.password) {
                         throw new Error("El correo o la contraseña es incorrecto.");
                     }
 
@@ -39,13 +41,13 @@ export const authOptions: NextAuthOptions = {
                         }
                     }) as any;
 
-                    if(!user) {
+                    if (!user) {
                         throw new Error("Ninguna cuenta pertenece a este correo.");
                     }
 
                     const isMatch = await bcrypt.compare(credentials.password, user?.password!);
 
-                    if(!isMatch) {
+                    if (!isMatch) {
                         throw new Error("La contraseña es incorrecto!");
                     }
 
@@ -67,28 +69,81 @@ export const authOptions: NextAuthOptions = {
                 }
             },
         }),
-    ],
 
+        GoogleProvider({
+            id: "google",
+            name: "Google",
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+            allowDangerousEmailAccountLinking: true,
+            authorization: {
+                params: {
+                    prompt: "consent",
+                    access_type: "offline",
+                    response_type: "code"
+                }
+            },
+            async profile(profile): Promise<any> {
+                try {
+                    const isUserExist: any = await prisma.user.findUnique({
+                        where: {
+                            email: profile?.email
+                        }
+                    });
+
+                    if (!isUserExist) {
+                        const hashedPassword: string = await bcrypt.hash(profile.sub, 10);
+                        const newUser = await prisma.user.create({
+                            data: {
+                                name: profile.name,
+                                email: profile.email,
+                                password: hashedPassword
+                            }
+                        });
+
+                        return { ...newUser };
+                    }
+
+                    return { ...isUserExist };
+                } catch (error) {
+                    console.log("Error checking if user exists: ", error);
+
+                    return NextResponse.json(
+                        JSON.stringify({
+                            message: `Il s'est passé un problème: ${error}`,
+                        }), { status: 500 });
+                }
+            },
+        }),
+    ],
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
+            if (account?.provider === "google") {
+                return true;
+            }
+
             return true;
         },
 
+        async redirect({ url, baseUrl }) {
+            return baseUrl
+        },
+
         async jwt({ token, user, account }: any) {
-            if(user) {
+            if (user) {
                 token.id = user.id;
                 token.role = user.role;
-                token.accessToken = user.jwtUserId;
+                token.accessToken = user.jwtUserId || account?.access_token;
             }
 
             return token;
         },
 
         async session({ session, token }: any) {
-            if(session?.user) {
+            if (session?.user) {
                 session.user.role = token.role;
                 session.user.id = token.id;
-                session.accessToken = token.accessToken || "";
+                session.accessToken = token.accessToken;
             }
 
             return session;

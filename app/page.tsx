@@ -1,26 +1,29 @@
 "use client";
 
 import Image from "next/image";
-
-import heroImage from "@/public/images/library2.jpg";
-import Link from "next/link";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+
 import SelectSearchOption from "@/components/SelectSearchOption";
+import library1 from "@/public/images/library.jpg";
+import library2 from "@/public/images/library2.jpg";
+import library3 from "@/public/images/library3.jpg";
 
 const Home: React.FC = () => {
+  const { data }: any = useSession();
+
   return (
     <section>
       <div className="relative py-12 bg-white sm:py-16 lg:py-20">
         <div className="absolute inset-0 z-0">
           <Image
             className="w-full h-full bg-cover object-cover object-top"
-            src={heroImage} alt="hero"
+            src={library2} alt="hero"
           />
         </div>
 
-        <div
-          className="absolute inset-0 bg-gradient-to-t from-black to-transparent"
-        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
 
         <div className="absolute inset-0 bg-gray-900 bg-opacity-40"></div>
 
@@ -51,25 +54,7 @@ const Home: React.FC = () => {
               <div>
                 <Link
                   href="/search"
-                  className="
-                                inline-flex
-                                items-center
-                                justify-center
-                                w-full
-                                px-6
-                                py-4
-                                text-sm
-                                font-bold
-                                tracking-widest
-                                text-white
-                                uppercase
-                                transition-all
-                                duration-200
-                                bg-orange-900
-                                border border-transparent
-                                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-white
-                                hover:bg-orange-800
-                            "
+                  className="inline-flex items-center justify-center w-full px-6 py-4 text-sm font-bold tracking-widest text-white uppercase transition-all duration-200 bg-secondary border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-white hover:bg-orange-800"
                 >
                   Buscar
                 </Link>
@@ -80,7 +65,46 @@ const Home: React.FC = () => {
       </div>
 
       <div className="py-12 bg-white">
+        <section className="py-10 bg-white sm:py-16 lg:py-24">
+          <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
+            <div className="max-w-2xl mx-auto text-center">
+              <div className="flex items-center justify-center">
+                <div className="w-20 h-20 -mr-6 overflow-hidden bg-gray-300 rounded-full">
+                  <Image className="object-cover w-full h-full" src={library1} alt="" />
+                </div>
 
+                <div className="relative overflow-hidden bg-gray-300 border-8 border-white rounded-full w-28 h-28">
+                  <Image className="object-cover w-full h-full" src={library2} alt="" />
+                </div>
+
+                <div className="w-20 h-20 -ml-6 overflow-hidden bg-gray-300 rounded-full">
+                  <Image className="object-cover w-full h-full" src={library3} alt="" />
+                </div>
+              </div>
+
+              <h2 className="mt-8 text-3xl font-bold leading-tight text-black lg:mt-12 sm:text-4xl lg:text-5xl">
+                Únase a otros <span className="border-b-8 border-yellow-300">5,482</span> usuarios que utilizan nuestra biblioteca
+              </h2>
+              <p className="max-w-xl mx-auto mt-6 text-xl text-gray-600 md:mt-10">
+                Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis.
+              </p>
+
+              <div className="max-w-min mx-auto mt-5">
+                {data?.user ? (
+                  <Link href="/search/" className="flex items-center min-w-max gap-2 text-sm py-2 px-2 md:px-4 cursor-pointer border-2 border-primary rounded-md text-primary transition-all duration-200 hover:opacity-90">
+                    <MagnifyingGlassIcon className="h-5 w-5 text-primary" />
+
+                    <p className="">Buscar libros</p>
+                  </Link>
+                ) : (
+                  <Link href="/signin" className="flex items-center min-w-max gap-2 text-sm py-2 px-2 md:px-4 cursor-pointer border-2 border-primary rounded-md text-primary transition-all duration-200 hover:opacity-90">
+                    Iniciar Session
+                  </Link>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </section>
   );

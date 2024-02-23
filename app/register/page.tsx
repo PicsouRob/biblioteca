@@ -18,6 +18,7 @@ import Logo from "@/components/Logo";
 import Error from "@/components/Error";
 import { AuthenticateValuesData } from "@/types/user";
 import { UserIcon } from "@heroicons/react/24/outline";
+import ConnectWithGoogle from "@/components/ConnectWithGoogle";
 
 const validation = Yup.object().shape({
     name: Yup.string().required("El nombre es obligatorio."),
@@ -126,6 +127,8 @@ const Register: React.FC = () => {
                         </Link>
                     </p>
 
+                    <ConnectWithGoogle />
+
                     <Formik
                         initialValues={{ name: '', email: '', password: '' }}
                         validationSchema={validation}
@@ -133,7 +136,7 @@ const Register: React.FC = () => {
                         innerRef={formRef}
                     >
                         {({ values, errors, handleSubmit, handleChange, touched }) => (
-                            <form onSubmit={handleSubmit} className="mt-8">
+                            <form onSubmit={handleSubmit} className="mt-3">
                                 {error && <Error text={error} />}
                                 <div className="space-y-5">
                                     <div>
@@ -150,7 +153,7 @@ const Register: React.FC = () => {
                                                 value={values.name}
                                                 id=""
                                                 placeholder="Entra tu nombre"
-                                                className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                                                className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-100 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
                                             />
                                         </div>
 
@@ -175,7 +178,7 @@ const Register: React.FC = () => {
                                                 value={values.email}
                                                 id=""
                                                 placeholder="Entra tu correo"
-                                                className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                                                className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-100 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
                                             />
                                         </div>
 
@@ -207,7 +210,7 @@ const Register: React.FC = () => {
                                                 name="password"
                                                 id=""
                                                 placeholder="Entra tu contraseña"
-                                                className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-50 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
+                                                className="block w-full py-4 pl-10 pr-4 text-black placeholder-gray-500 transition-all duration-200 border border-gray-200 rounded-md bg-gray-100 focus:outline-none focus:border-blue-600 focus:bg-white caret-blue-600"
                                             />
                                         </div>
 

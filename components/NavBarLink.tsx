@@ -4,13 +4,14 @@ import Link from "next/link";
 
 interface NavBarLinkProps {
     text: string;
+    link: string
 }
 
-const NavBarLink: React.FC<NavBarLinkProps> = ({ text }) => {
+const NavBarLink: React.FC<NavBarLinkProps> = ({ text, link }) => {
     return (
         <Link
-            href="/"
-            className="text-sm font-medium text-gray-900 transition-all duration-200 rounded hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">
+            href={link}
+            className="text-sm font-medium text-gray-900 transition-all duration-200 hover:text-gray-900 focus:outline-none border-b-2 border-b-white focus:border-b-primary">
             {text}
         </Link>
     );
