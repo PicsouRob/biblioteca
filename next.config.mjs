@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: [ 'cdn.rareblocks.xyz', 'lh3.googleusercontent.com' ],
+        domains: [ 'cdn.rareblocks.xyz', 'lh3.googleusercontent.com', 'books.google.com' ],
         remotePatterns: [
             {
                 protocol: 'https',

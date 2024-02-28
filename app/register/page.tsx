@@ -5,7 +5,7 @@ import { Formik, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import toast, { Toaster } from "react-hot-toast";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { useRouter } from "next/navigation";
 

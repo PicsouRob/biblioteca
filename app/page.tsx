@@ -9,9 +9,11 @@ import SelectSearchOption from "@/components/SelectSearchOption";
 import library1 from "@/public/images/library.jpg";
 import library2 from "@/public/images/library2.jpg";
 import library3 from "@/public/images/library3.jpg";
+import { useState } from "react";
 
 const Home: React.FC = () => {
   const { data }: any = useSession();
+  const [value, setValue] = useState<string>("");
 
   return (
     <section>
@@ -42,7 +44,8 @@ const Home: React.FC = () => {
                     <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" />
                   </div>
 
-                  <input type="text" name="" id=""
+                  <input type="text" name="value" id="value"
+                    onChange={(e) => setValue(e.target.value)}
                     placeholder="Buscar libros por titulo, autor, ISBN, etc..."
                     className="block w-full py-3 pl-10 pr-4 text-base placeholder:text-sm font-normal leading-7 text-gray-900 placeholder-gray-500 bg- border border-white focus:ring-0 focus:border-white focus:ring-offset-0"
                   />
@@ -53,7 +56,7 @@ const Home: React.FC = () => {
 
               <div>
                 <Link
-                  href="/search"
+                  href={`/search?id=${value}`}
                   className="inline-flex items-center justify-center w-full px-6 py-4 text-sm font-bold tracking-widest text-white uppercase transition-all duration-200 bg-secondary border border-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-white hover:bg-orange-800"
                 >
                   Buscar
