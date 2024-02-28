@@ -116,7 +116,7 @@ const Search: React.FC = () => {
                             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
                                 {books.map((data, index) => (
                                     <div key={index} className="relative bg-white p-3 text-center flex items-center justify-center rounded hover:bg-green-0 hover:shadow transition-all duration-150 ease-in-out">
-                                        <Link href={`/book-info?id=${data.id}`} className="space-y-3">
+                                        <Link href={`/book-info/${data.id}`} className="space-y-3">
                                             <div className="">
                                                 <Image alt={data.volumeInfo.title}
                                                     height={200} width={200}
