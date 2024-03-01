@@ -7,12 +7,37 @@ import Link from 'next/link';
 
 import bookImage from '@/public/images/book.png';
 import ListInfo from '@/components/ListInfo';
+import HeaderTitle from '@/components/HeaderTitle';
 
 const BookView: React.FC = () => {
     const { id } = useParams();
     const [bookInfo, setBookInfo] = useState<any>({});
+    const [loanBook, setLoanBook] = useState<any>({});
+    console.log(loanBook);
 
-    console.log(bookInfo);
+    useEffect(() => {
+        const getStateOfLoanBook = async () => {
+            try {
+                const response = await fetch(`/api/find/loan-book?id=${id}`, {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json", },
+                });
+                const result = JSON.parse(await response.json());
+                
+                if (response.ok) {
+                    setLoanBook(result);
+                } else {
+                    console.log("No encontro ningun libros");
+                    setLoanBook({});
+                }
+            } catch (error: any) {
+                console.log("Error: ", error.message);
+                setLoanBook({});
+            }
+        }
+
+        getStateOfLoanBook();
+    }, [id]);
 
     useEffect(() => {
         const getBookInfo = async () => {
@@ -40,20 +65,25 @@ const BookView: React.FC = () => {
     }, [id]);
     
     return (
-        <div className="py-10 bg-white sm:py-16 text-primary">
-            <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl space-y-10 divide-y-2 divide-dashed">
+        <div className="bg-gray-100 text-primary">
+            <HeaderTitle
+                title='Información sobre el libro'
+                text='Aquí tienes de manera detallado las informaciones sobre el libro seleccionado'
+            />
+
+            <div className="px-4 mx-auto sm:px-6 lg:px-8 py-10 sm:py-16 max-w-7xl space-y-10 divide-y-2 divide-dashed">
                 {bookInfo && bookInfo.volumeInfo ? (
-                    <div className="flex items-cente gap-5 md:gap-8">
-                        <div className="flex- w-full md:w-1/2 relative">
+                    <div className="flex flex-col lg:flex-row gap-5 md:gap-8">
+                        <div className="w-full h-[300px] lg:h-auto lg:w-1/2 relative">
                             <Image alt={bookInfo!.volumeInfo.title}
                                 layout='fill'
                                 objectFit='contain'
                                 src={bookInfo.volumeInfo.imageLinks ? bookInfo.volumeInfo.imageLinks.smallThumbnail : bookImage}
-                                className="w-full h-full border border-dashed object-cover object-top rounded-sm flex-"
+                                className="w-full h-full border border-dashed object-cover object-left rounded-sm flex-"
                             />
                         </div>
 
-                        <div className="space-y-2 w-full md:w-1/2">
+                        <div className="space-y-2 w-full lg:w-1/2">
                             <h1 className="font-bold text-xl md:text-2xl">{bookInfo.volumeInfo.title}</h1>
                             <p className="">{bookInfo.volumeInfo.subtitle}</p>
                             <p className="text-[14px]">{bookInfo.volumeInfo.description}</p>
@@ -69,8 +99,20 @@ const BookView: React.FC = () => {
                             </div>
 
                             <div className="flex items-center justify-between gap-4 pt-5">
-                                <Link href={`/loan-book/${bookInfo.id}`} className='py-2 text-center px-6 border text-white bg-primary rounded-md hover:shadow flex-1 transition-all duration-150 ease-in-out hover:opacity-90'>Prestar</Link>
-                                <Link href={`/reservation/${bookInfo.id}`} className='py-2 px-6 border text-center bg-secondary text-white rounded-md hover:shadow flex-1 transition-all duration-150 ease-in-out hover:opacity-90'>Reservar</Link>
+                                {loanBook && loanBook?.state !== "Prestado" ? (
+                                    <Link
+                                        href={`/loan-book/${bookInfo.id}`}
+                                        className='py-2 text-center px-6 border text-white bg-primary rounded-md hover:shadow flex-1 transition-all duration-150 ease-in-out hover:opacity-90'
+                                    >
+                                        Prestar
+                                    </Link>
+                                ) : (
+                                    <Link href={`/reservation/${bookInfo.id}`}
+                                        className='py-2 px-6 border text-center bg-secondary text-white rounded-md hover:shadow flex-1 transition-all duration-150 ease-in-out hover:opacity-90'
+                                    >
+                                        Reservar
+                                    </Link>
+                                )}
                             </div>
                         </div>
                     </div>

@@ -23,11 +23,26 @@ model User {
 }
 
 model Reservation {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  bookId           String
+  comment          String
+  userId           String
+  dateCreated      DateTime @default(now())
+  dateUpdated      DateTime @updatedAt
+  recuperationDate String
+  state            String   @default("Reservado")
 }
 
 model Loan {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  bookId       String
+  comment      String
+  userId       String
+  dateCreated  DateTime @default(now())
+  dateUpdated  DateTime @updatedAt
+  dateReturned String
+  returned     Boolean  @default(false)
+  state        String   @default("Prestado")
 }
 
 model Account {

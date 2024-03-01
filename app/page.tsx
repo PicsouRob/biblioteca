@@ -16,7 +16,7 @@ const Home: React.FC = () => {
   const [value, setValue] = useState<string>("");
 
   return (
-    <section>
+    <section className="">
       <div className="relative py-12 bg-white sm:py-16 lg:py-20">
         <div className="absolute inset-0 z-0">
           <Image
