@@ -3,13 +3,13 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useParams, useRouter,  } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 import bookImage from '@/public/images/book.png';
 import ListInfo from '@/components/ListInfo';
 import HeaderTitle from '@/components/HeaderTitle';
 import { useBookContext } from '@/hooks/useBookContext';
 import { getOneBook } from '@/actions/getOneBook';
-import { useSession } from 'next-auth/react';
 
 const BookView: React.FC = () => {
     const { id } = useParams();

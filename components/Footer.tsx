@@ -1,9 +1,10 @@
 "use client";
 
-import { useShowContent } from "@/hooks/useShowContent";
 import React from "react";
-import Logo from "./Logo";
 import Link from "next/link";
+
+import { useShowContent } from "@/hooks/useShowContent";
+import Logo from "./Logo";
 
 const Footer: React.FC = () => {
     const date: Date = new Date();
@@ -19,49 +20,49 @@ const Footer: React.FC = () => {
                             <div>
                                 <p className="text-base text-gray-500">Nosotros</p>
 
-                                <ul className="mt-8 space-y-4">
-                                    <li>
-                                        <a href="#" title="" className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80"> Acerca de </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="" className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80"> Cómo funciona </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="" className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80"> FAQ </a>
-                                    </li>
-                                </ul>
+                                <div className="mt-8 space-y-4 flex flex-col">
+                                    <Link href='/about' className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80">
+                                        Acerca de
+                                    </Link>
+                                    <Link href='/how-it-works' className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80">
+                                        Cómo funciona
+                                    </Link>
+                                    <Link href='/faq' className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80">
+                                        FAQ
+                                    </Link>
+                                </div>
                             </div>
 
                             <div>
                                 <p className="text-base text-gray-500">Ayuda</p>
 
-                                <ul className="mt-8 space-y-4">
-                                    <li>
-                                        <a href="#" title="" className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80"> Atención al cliente </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="" className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80"> Términos y condiciones </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="" className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80"> Política de privacidad </a>
-                                    </li>
-                                </ul>
+                                <div className="mt-8 space-y-4 flex flex-col">
+                                    <Link href='/' className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80">
+                                        Atención al cliente
+                                    </Link>
+                                    <Link href='/' className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80">
+                                        Términos y condiciones
+                                    </Link>
+                                    <Link href='/' className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80">
+                                        Política de privacidad
+                                    </Link>
+                                </div>
                             </div>
 
                             <div>
                                 <p className="text-base text-gray-500">Recursos</p>
 
-                                <ul className="mt-8 space-y-4">
-                                    <li>
-                                        <a href="#" title="" className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80"> Catalogo </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="" className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80"> Buscar </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" title="" className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80"> Blog </a>
-                                    </li>
-                                </ul>
+                                <div className="mt-8 space-y-4 flex flex-col">
+                                    <Link href='/categories' className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80">
+                                        Categoria
+                                    </Link>
+                                    <Link href='/search' className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80">
+                                        Buscar
+                                    </Link>
+                                    <Link href='/contact' className="text-base text-white transition-all duration-200 hover:text-opacity-80 focus:text-opacity-80">
+                                        Contact
+                                    </Link>
+                                </div>
                             </div>
 
                             <div>
@@ -88,7 +89,7 @@ const Footer: React.FC = () => {
 
                             <p className="w-full mt-8 text-sm text-center text-gray-100 md:mt-0 md:w-auto">© Copyright {year}, Todos los derechos reservados </p>
 
-                            <Link href="#" className="hover:underline">Términos y condiciones</Link>
+                            <Link href="/" className="hover:underline">Términos y condiciones</Link>
                         </div>
                     </div>
                 </div>

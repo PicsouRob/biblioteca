@@ -12,6 +12,7 @@ import library2 from "@/public/images/library2.jpg";
 import library3 from "@/public/images/library3.jpg";
 import BookByCategory from "@/components/BookByCategory";
 import Categories from "@/components/Categories";
+import Testimonials from "@/components/Testimonials";
 
 const Home: React.FC = () => {
   const { data }: any = useSession();
@@ -116,6 +117,8 @@ const Home: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <Testimonials />
     </section>
   );
 }
