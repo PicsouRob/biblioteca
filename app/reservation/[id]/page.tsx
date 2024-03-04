@@ -13,9 +13,14 @@ import InputField from '@/components/InputField';
 import AuthSubmitButton from '@/components/AuthSubmitButton';
 import { ReservationProps } from '@/types/model';
 import HeaderTitle from '@/components/HeaderTitle';
+import { getOneBook } from '@/actions/getOneBook';
+import { sendMail } from '@/libs/sendMail';
+import { convertDate } from '@/utils/convertDate';
 
 const validation = Yup.object().shape({
     id: Yup.string(),
+    title: Yup.string(),
+    image: Yup.string(),
     bookId: Yup.string().required("El id del libro es obligatorio"),
     userId: Yup.string().required("El id del usuario es obligatorio."),
     comment: Yup.string(),
@@ -25,6 +30,8 @@ const validation = Yup.object().shape({
 const Reservation: React.FC = () => {
     const { data }: any = useSession();
     const router: AppRouterInstance = useRouter();
+    const [title, setTitle] = useState<string>('');
+    const [image, setImage] = useState<string>('');
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const formRef = useRef<FormikProps<ReservationProps> | null>(null);
@@ -41,10 +48,26 @@ const Reservation: React.FC = () => {
         return () => document.removeEventListener('keypress', keyPress);
     }, [keyPress]);
 
+    useEffect(() => {
+        const getFindedBook = async () => {
+            const bookFinded = await getOneBook(id.toString());
+            
+            setTitle(bookFinded.volumeInfo.title);
+            setImage(bookFinded.volumeInfo.imageLinks?.smallThumbnail);
+        }
+
+        getFindedBook();
+    }, [id]);
+
     const handleSubmitForm = async (values: ReservationProps) => {
         try {
             setError("");
             setIsLoading(true);
+            values.title = title;
+            values.image = image;
+            const convertion = convertDate(values.recuperationDate);
+            values.recuperationDate = convertion;
+
             const response = await fetch("/api/reservation", {
                 method: "POST",
                 headers: { "Content-Type": "application/json", },
@@ -55,6 +78,13 @@ const Reservation: React.FC = () => {
             
             if(response.ok) {
                 toast.success("Libro reservado exitosamente!");
+
+                await sendMail({
+                    name: data?.user?.name,
+                    email: data?.user?.email,
+                    message: `Su solicitud de reservación a nuestro portal web de la biblioteca ha sido aprobada exitosamente. Has reservado el libre titulado: ${values.title}. Pasa a recuperarlo en esta fecha: ${values.recuperationDate}.`,
+                    subject: "Reservación de libro",
+                });
             
                 router.refresh();
                 router.push(`/profile/${data?.user?.id}`);
@@ -80,7 +110,7 @@ const Reservation: React.FC = () => {
                 <div className="relative px-4 py-6 sm:px-6 z-50 mx-auto lg:px-8 max-w-7xl sm:max-w-4xl lg:max-w-3xl space-y-10 bg-white -mt-8 lg:-mt-12 rounded-lg">
                     <Formik
                         initialValues={{
-                            id: '', userId: data?.user?.id!, bookId: id.toString(), comment: '', recuperationDate: '',
+                            id: '', title: '', image: '', userId: data?.user?.id!, bookId: id.toString(), comment: '', recuperationDate: '',
                         }}
                         validationSchema={validation}
                         onSubmit={(values) => handleSubmitForm(values)}

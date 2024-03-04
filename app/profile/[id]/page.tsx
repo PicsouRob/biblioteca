@@ -1,19 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { useParams } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
+import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
+import { useParams } from "next/navigation";
 
 import avatar from "@/public/images/profile-avatar.png";
 import { profileOptions } from "@/utils/profileData";
 import EmptyView from "@/components/EmptyView";
+import UserLoanBook from "@/components/UserLoanBook";
+import { userLoanBook } from "@/actions/userLoanBook";
+import UserReservedBook from "@/components/UserReservedBook";
 
 const UserProfile: React.FC = () => {
+    const { data: session } = useSession();
+    const { id }: Params = useParams();
     const [optionSelected, setOptionSelected] = useState<number>(0);
-    const { data } = useSession();
-    const { id } = useParams();
 
     const deleteAccount = () => {
         try {
@@ -24,7 +28,7 @@ const UserProfile: React.FC = () => {
     }
 
     return (
-        <div className="bg-white text-primary">
+        <div className="bg-gray-100 text-primary">
             <div className="max-w-7xl h-full px-6 lg:px-8 mx-auto min-h-screen py-12">
                 <div className="relative flex flex-col w-full min-w-0 mb-6 break-words border-2 border-dashed bg-clip-border rounded-2xl border-stone-200 bg-light/30 draggable">
                     <div className="px-9 pt-9 flex-auto min-h-[70px] pb-0 bg-transparent">
@@ -42,17 +46,20 @@ const UserProfile: React.FC = () => {
                                     </div>
                                 </div>
                             </div>
+
                             <div className="grow">
                                 <div className="flex flex-wrap items-center justify-between mb-2">
                                     <div className="flex flex-col">
                                         <div className="flex items-center mb-2">
-                                            <a className="text-secondary-inverse hover:text-primary transition-colors duration-200 ease-in-out font-semibold text-[1.5rem] mr-1" href="javascript:void(0)"> {data?.user?.name} </a>
+                                            <a
+                                                className="text-secondary-inverse hover:text-primary transition-colors duration-200 ease-in-out font-semibold text-[1.5rem] mr-1"
+                                                href="javascript:void(0)"> {session?.user?.name} </a>
                                         </div>
                                         <div className="flex flex-wrap pr-2 mb-4 font-medium">
                                             <a className="flex items-center mb-2 mr-5 text-secondary-dark hover:text-primary" href="javascript:void(0)">
                                                 <span className="mr-2">
                                                     <EnvelopeIcon className="h-5s w-5" />
-                                                </span> {data?.user?.email} </a>
+                                                </span> {session?.user?.email} </a>
                                         </div>
                                     </div>
 
@@ -115,11 +122,12 @@ const UserProfile: React.FC = () => {
                                 </div>
                             </div>
                         </div>
+
                         <hr className="w-full h-px border-neutral-200" />
-                        <ul nav-tabs className="group flex flex-wrap items-stretch text-[1.1rem] list-none border-b-2 border-transparent border-solid active-assignments">
+                        <ul nav-tabs className="group flex gap-4 flex-wrap items-stretch text-[1.1rem] list-none active-assignments">
                             {profileOptions.map((data, ind) => (
                                 <li key={ind}
-                                    className={`${data.index === optionSelected && "border-b-green-500 text-green-500"} border-b-2 border-b-white px-3 py-3 mt-4 cursor-pointer transition-all duration-150 ease-in-out`}
+                                    className={`${ind === optionSelected ? "border-b-green-500 text-green-500" : "border-b-white"} border-b-2 px-3 py-2 my-4 cursor-pointer transition-all duration-150 ease-in-out`}
                                     onClick={() => setOptionSelected(data.index)}
                                 >
                                     {data.title}
@@ -129,11 +137,11 @@ const UserProfile: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="py-12">
+                <div className="py-6">
                     {optionSelected === 0 ? (
-                        <EmptyView text="Aún no tienes ningún libro reservado. Empiece por buscar un libro y haga una reserva." />
+                        <UserLoanBook id={id} />
                     ) : (
-                        <EmptyView text="Aún no tienes ningún libro prestado. Empiece por buscar un libro y haga un prestamo." />
+                        <UserReservedBook id={id} />
                     )}
                 </div>
             </div>

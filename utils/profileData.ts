@@ -6,10 +6,10 @@ interface ProfileSelectedOptionProps {
 export const profileOptions: ProfileSelectedOptionProps[] = [
     {
         index: 0,
-        title: "Libros reservados",
+        title: "Libros prestados",
     },
     {
         index: 1,
-        title: "Libros prestados",
+        title: "Libros reservados",
     },
 ];

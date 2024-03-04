@@ -5,10 +5,10 @@ import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Formik, FormikProps } from "formik";
 import * as Yup from 'yup';
-import Image from "next/image";
-import Link from "next/link";
 
-import bookImage from '@/public/images/book.png';
+import Book from "@/components/Book";
+import Categories from "@/components/Categories";
+import { findListOfBook } from "@/actions/findListOfBook";
 
 const validation = Yup.object().shape({
     value: Yup.string().required("El valor es obligotorio."),
@@ -16,7 +16,8 @@ const validation = Yup.object().shape({
 
 const Search: React.FC = () => {
     const searchParams: ReadonlyURLSearchParams = useSearchParams();
-    const id = searchParams.get("id");
+    const input = searchParams.get("input");
+    console.log(input);
     const formRef = useRef<FormikProps<{ value: string; }> | null>(null);
     const [books, setBooks] = useState<any[]>([]);
 
@@ -32,28 +33,16 @@ const Search: React.FC = () => {
     }, [keyPress]);
 
     useEffect(() => {
-        handleSearch(id!);
-    }, [id]);
+        if (input != null) {
+            handleSearch(input!);
+        }
+    }, [input]);
 
     const handleSearch = async (value: string ) => {
-        try {
-            const url: string =  `https://www.googleapis.com/books/v1/volumes?q=${value}&langRestrict=es&maxResults=40&key=AIzaSyCmIncsVIIYl5XcqTfg7k1uEKPA1eMTAIs`;
-            const response = await fetch(url, {
-                method: "GET",
-                headers: { "Content-Type": "application/json", },
-            });
-            const result = await response.json();
-            
-            if(response.ok) {
-                setBooks(result.items);
-            } else {
-                console.log("No encontro ningun libros");
-                setBooks([]);
-            }
-        } catch (error: any) {
-            console.log("Error: ", error.message);
-            setBooks([]);
-        }
+        const url: string =  `https://www.googleapis.com/books/v1/volumes?q=${value}&langRestrict=es&maxResults=40&key=AIzaSyCmIncsVIIYl5XcqTfg7k1uEKPA1eMTAIs`;
+        const listBook = await findListOfBook(url);
+        
+        setBooks(listBook);
     }
 
     return (
@@ -67,7 +56,7 @@ const Search: React.FC = () => {
                         </p>
 
                         <Formik
-                            initialValues={{ value: id || "", }}
+                            initialValues={{ value: input || "", }}
                             validationSchema={validation}
                             onSubmit={(values) => handleSearch(values.value)}
                             innerRef={formRef}
@@ -106,37 +95,25 @@ const Search: React.FC = () => {
                         </Formik>
                     </div>
 
-                    <div className="pt-5 space-y-5">
-                        <div className="flex items-center justify-between gap-4">
-                            <h3 className="">Libros Encontrados</h3>
-                            <p className="">Total encontrados: {books.length}</p>
-                        </div>
-
-                        <div className="">
+                    {books.length < 1 ? (
+                        <Categories />
+                    ) : (
+                        <div className="pt-5 space-y-5 transition-all duration-150 ease-in-out">
+                            <div className="flex items-center justify-between gap-4">
+                                <h3 className="">Libros Encontrados</h3>
+                                <p className="">Total encontrados: {books.length}</p>
+                            </div>
                             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
                                 {books.map((data, index) => (
-                                    <div key={index} className="relative bg-white p-3 text-center flex items-center justify-center rounded hover:bg-green-0 hover:shadow transition-all duration-150 ease-in-out">
-                                        <Link href={`/book-info/${data.id}`} className="space-y-3">
-                                            <div className="">
-                                                <Image alt={data.volumeInfo.title}
-                                                    height={200} width={200}
-                                                    src={data.volumeInfo.imageLinks ? data.volumeInfo.imageLinks.thumbnail : bookImage}
-                                                    className="w-full h-28 object-cover object-top rounded-sm flex-"
-                                                />
-                                            </div>
-    
-                                            <h2 className="font-medium text-xs text-gray-600">{data.volumeInfo.title}</h2>
-                                            <p className="text-xs text-gray-600">{data.volumeInfo.authors ? data.volumeInfo.authors[0] : "Autor desconocido"}</p>
-                                        </Link>
-                                    </div>
+                                    <Book key={index} bookInfo={data} />
                                 ))}
                             </div>
                         </div>
-                    </div>
+                        )}
                 </div>
             </div>
         </Suspense>
-    );
+    )
 }
 
 export default Search;

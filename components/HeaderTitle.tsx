@@ -11,11 +11,12 @@ interface HeaderTitleProps {
 
 const HeaderTitle: React.FC<HeaderTitleProps> = ({ text, title }) => {
     return (
-        <div className="relative text-white text-center py-16 sm:py-20 px-8 h-[200px] lg:h-[250px]">
-                <div className="">
+        <div className="relative bg-green-200 text-white text-center py-16 sm:py-20 px-8 h-[200px] lg:h-[300px]">
+                <div className="absolute inset-0">
                     <Image
-                        className="w-full h-full bg-cover object-cover object-center"
-                        src={backdrop} alt="hero" layout='fill' objectFit='cover'
+                        width={1000} height={100}
+                        className="w-full h-full bg-cover object-cover object-bottom"
+                        src={backdrop} alt="hero"
                     />
                 </div>
 

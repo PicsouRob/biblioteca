@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useParams, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -13,13 +13,18 @@ import { Loan } from '@/types/model';
 import InputField from '@/components/InputField';
 import AuthSubmitButton from '@/components/AuthSubmitButton';
 import HeaderTitle from '@/components/HeaderTitle';
+import { getOneBook } from '@/actions/getOneBook';
+import { sendMail } from '@/libs/sendMail';
+import { convertDate } from '@/utils/convertDate';
 
 const validation = Yup.object().shape({
     id: Yup.string(),
     bookId: Yup.string().required("El id del libro es obligatorio"),
+    title: Yup.string(),
+    image: Yup.string(),
     userId: Yup.string().required("El id del usuario es obligatorio."),
     comment: Yup.string(),
-    dateReturned: Yup.string().required("La fecha de devolución es obligatorio."),
+    dateReturned: Yup.date().required("La fecha de devolución es obligatorio."),
 });
 
 const LoanBook: React.FC = () => {
@@ -28,6 +33,8 @@ const LoanBook: React.FC = () => {
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const formRef = useRef<FormikProps<Loan> | null>(null);
+    const [title, setTitle] = useState<string>('');
+    const [image, setImage] = useState<string>('');
     const { id } = useParams();
 
     const keyPress = useCallback((event: KeyboardEvent) => {
@@ -35,6 +42,17 @@ const LoanBook: React.FC = () => {
             formRef.current.handleSubmit();
         }
     }, []);
+
+    useEffect(() => {
+        const getFindedBook = async () => {
+            const bookFinded = await getOneBook(id.toString());
+            
+            setTitle(bookFinded.volumeInfo.title);
+            setImage(bookFinded.volumeInfo.imageLinks.smallThumbnail);
+        }
+
+        getFindedBook();
+    }, [id]);
 
     useEffect(() => {
         document.addEventListener('keypress', keyPress);
@@ -45,6 +63,11 @@ const LoanBook: React.FC = () => {
         try {
             setError("");
             setIsLoading(true);
+            values.title = title;
+            values.image = image;
+            const convertion = convertDate(values.dateReturned);
+            values.dateReturned = convertion;
+            
             const response = await fetch("/api/loan", {
                 method: "POST",
                 headers: { "Content-Type": "application/json", },
@@ -55,6 +78,13 @@ const LoanBook: React.FC = () => {
             
             if(response.ok) {
                 toast.success("Libro prestado exitosamente!");
+
+                await sendMail({
+                    name: data.user?.name,
+                    email: data.user?.email,
+                    message: `Su solicitud de préstamo a nuestro portal web de la biblioteca ha sido aprobada exitosamente. Has prestado el libre titulado: ${values.title} hasta ${values.dateReturned}. Puede recoger el libro en recepción y asegurarse de devolverlo a la biblioteca al finalizar este préstamo, por favor.`,
+                    subject: "Prestamo de libro",
+                });
             
                 router.refresh();
                 router.push(`/profile/${data?.user?.id}`);
@@ -80,7 +110,8 @@ const LoanBook: React.FC = () => {
                 <div className="relative px-4 py-6 sm:px-6 z-50 mx-auto lg:px-8 max-w-7xl sm:max-w-4xl lg:max-w-3xl space-y-10 bg-white -mt-8 lg:-mt-12 rounded-lg">
                     <Formik
                         initialValues={{
-                            id: 'kjkjj', userId: data?.user?.id! || id.toString(), bookId: id.toString(), comment: '', dateReturned: '',
+                            id: 'kjkjj', title, image,
+                            userId: data?.user?.id!, bookId: id.toString(), comment: '', dateReturned: '',
                         }}
                         validationSchema={validation}
                         onSubmit={(values) => handleSubmitForm(values)}
@@ -102,7 +133,7 @@ const LoanBook: React.FC = () => {
                                 <InputField label='Fecha de devolución *'
                                     type='date' name='dateReturned'
                                     placeholder='Fecha de devolución'
-                                    value={values.dateReturned} handleChange={handleChange}
+                                    value={values.dateReturned.toString()} handleChange={handleChange}
                                 >
                                     {touched.dateReturned && errors.dateReturned && (
                                         <p className="text-red-500 text-sm pt-1">{errors.dateReturned}</p>

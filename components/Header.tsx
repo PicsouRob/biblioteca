@@ -2,17 +2,16 @@
 
 import Link from "next/link";
 import { Bars3Icon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { useSession } from "next-auth/react";
 
 import { useShowContent } from "@/hooks/useShowContent";
 import Logo from "./Logo";
 import NavBarLink from "./NavBarLink";
-import { useSession } from "next-auth/react";
 import { UserIcon } from "@heroicons/react/24/outline";
 
 const Header: React.FC = () => {
     const show: boolean = useShowContent();
     const { data }: any = useSession();
-    console.log(data);
 
     return (
         <div className="">
@@ -26,7 +25,7 @@ const Header: React.FC = () => {
 
                             <div className="hidden lg:flex lg:items-center lg:ml-16 xl:ml-24 lg:space-x-8">
                                 <NavBarLink link="/" text="Inicio" />
-                                <NavBarLink link="/" text="Catalogo" />
+                                <NavBarLink link="/categories" text="Categorias" />
                                 <NavBarLink link="/search" text="Buscar libros" />
                                 <NavBarLink link="/about" text="Acerca de" />
                                 <NavBarLink link="/contact" text="Contacto" />
@@ -64,8 +63,8 @@ const Header: React.FC = () => {
                                                     <p className="">Inicio</p>
                                                     <ChevronRightIcon className="h-4 w-4" />
                                                 </Link>
-                                                <Link href="/catalogue" className="flex items-center justify-between px-4 py-3 hover:bg-gray-100">
-                                                    <p className="">Catalogo</p>
+                                                <Link href="/categories" className="flex items-center justify-between px-4 py-3 hover:bg-gray-100">
+                                                    <p className="">CAtegorias</p>
                                                     <ChevronRightIcon className="h-4 w-4" />
                                                 </Link>
                                                 <Link href="/search" className="flex items-center justify-between px-4 py-3 hover:bg-gray-100">

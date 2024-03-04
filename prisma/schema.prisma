@@ -25,6 +25,8 @@ model User {
 model Reservation {
   id               String   @id @default(auto()) @map("_id") @db.ObjectId
   bookId           String
+  title            String
+  image            String   @default("")
   comment          String
   userId           String
   dateCreated      DateTime @default(now())
@@ -36,6 +38,8 @@ model Reservation {
 model Loan {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   bookId       String
+  title        String
+  image        String   @default("")
   comment      String
   userId       String
   dateCreated  DateTime @default(now())

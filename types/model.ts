@@ -26,21 +26,25 @@ export interface Book {
 export interface Loan {
     id: string;
     bookId: string;
+    title: string;
+    image: string;
     comment: string;
     userId: string;           
-    dateCreated?: string;
+    dateCreated?: Date;
     dateReturned: string;
     returned?: boolean;
-    state?: 'Disponible' | 'Prestado' | 'Reservado'; 
+    state?: string; 
 };
 
 export type ReservationProps = {
     id: string;
     bookId: string;
+    title: string;
+    image: string;
     comment: string;
     userId: string;           
     dateCreated?: Date;
     dateUpdated?: Date,
     recuperationDate: string;
-    state?: 'Disponible' | 'Prestado' | 'Reservado';
+    state?: string;
 }

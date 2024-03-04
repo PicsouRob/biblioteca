@@ -5,10 +5,10 @@ import { Reservation } from "@prisma/client";
 
 export async function POST(request: Request) {
     try {
-        const { userId, recuperationDate, comment, bookId } = (await request.json()) as Reservation;
+        const { userId, recuperationDate, comment, bookId, image, title } = (await request.json()) as Reservation;
 
-        if(!userId || !recuperationDate || !bookId) {
-            throw new Error("Todos los campos(userId, recuperationDate, bookId) son obligatorios!");
+        if(!userId || !recuperationDate || !bookId || !title) {
+            throw new Error("Todos los campos(title, userId, recuperationDate, bookId) son obligatorios!");
         }
 
         const existReservation = await prisma.reservation.findFirst({
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
         const reservation = await prisma.reservation.create({
             data: {
-                userId, recuperationDate, comment, bookId
+                title, image, userId, recuperationDate, comment, bookId
             }
         });
 
