@@ -40,9 +40,8 @@ const SignIn: React.FC = () => {
     
     useEffect(() => {
         if (session?.user) {
-            window.location.reload();
-
             router.push("/");
+            window.location.reload();
         }
     }, [session, router]);
 
