@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
