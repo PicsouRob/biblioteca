@@ -90,10 +90,10 @@ const BookView: React.FC = () => {
                                             
                                         <div className="pt-4 space-y-3">
                                             <p className=""><strong>Fecha Publicado: </strong> {findedBook.volumeInfo.publishedDate}</p>
-                                                <p className="flex gap-2"><strong>Autor: </strong> <ListInfo list={findedBook.volumeInfo.authors} /></p>
+                                            <p className="flex gap-2"><strong>Autor: </strong> <ListInfo list={findedBook.volumeInfo.authors} /></p>
                                             <p className=""><strong>Publicado Por: </strong> {findedBook.volumeInfo.publisher}</p>
                                             <p className=""><strong>Cantidad de Pagina: </strong> {findedBook.volumeInfo.pageCount}</p>
-                                                <p className="flex gap-2"><strong>Categoria: </strong> <ListInfo list={findedBook.volumeInfo.categories} /></p>
+                                            <p className="flex gap-2"><strong>Categoria: </strong> <ListInfo list={findedBook.volumeInfo.categories} /></p>
                                             <p className=""><strong>Estado: </strong> Disponible</p>
                                         </div>
                                     </div>
@@ -111,11 +111,19 @@ const BookView: React.FC = () => {
                                         ) : loanBook?.state === "Reservado" && loanBook?.userId === data?.user?.id ? (
                                             <div className="p-2 bg-green-100 text-green-600 w-full text-[14px]">Has Prestado este libro</div>
                                         ) : (
-                                            <div
-                                                onClick={() => handleClick(`/loan-book/${findedBook.id}`)}
-                                                className='py-2 text-center cursor-pointer px-6 border text-white bg-primary rounded-md hover:shadow flex-1 transition-all duration-150 ease-in-out hover:opacity-90'
-                                            >
-                                                Prestar
+                                            <div className="flex flex-col flex-wrap items-center justify-between gap-4 pt-5 w-full">
+                                                <div
+                                                    onClick={() => handleClick(`/loan-book/${findedBook.id}`)}
+                                                    className='py-2 w-full text-center cursor-pointer px-6 border text-white bg-primary rounded-md hover:shadow flex-1 transition-all duration-150 ease-in-out hover:opacity-90'
+                                                >
+                                                    Prestar
+                                                </div>
+                                                <div
+                                                    onClick={() => handleClick(`/reservation/${findedBook.id}`)}
+                                                    className='py-2 px-6 w-full border cursor-pointer text-center bg-secondary text-white rounded-md hover:shadow flex-1 transition-all duration-150 ease-in-out hover:opacity-90'
+                                                >
+                                                    Reservar
+                                                </div>
                                             </div>
                                         )}
                                     </div>

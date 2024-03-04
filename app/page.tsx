@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
@@ -15,8 +15,7 @@ import Testimonials from "@/components/Testimonials";
 const Home: React.FC = () => {
   const { data }: any = useSession();
   const [value, setValue] = useState<string>("");
-  console.log(data);
-
+  
   return (
     <section className="">
       <div className="relative py-12 bg-white sm:py-16 lg:py-20">

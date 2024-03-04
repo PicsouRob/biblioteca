@@ -6,8 +6,6 @@ import * as Yup from 'yup';
 import toast, { Toaster } from "react-hot-toast";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { useRouter } from "next/navigation";
 
 import leftImages from '@/public/images/signleft.jpg';
 import AuthSubmitButton from "@/components/AuthSubmitButton";
@@ -19,6 +17,7 @@ import Error from "@/components/Error";
 import { AuthenticateValuesData } from "@/types/user";
 import { UserIcon } from "@heroicons/react/24/outline";
 import ConnectWithGoogle from "@/components/ConnectWithGoogle";
+import { useRouter } from "next/navigation";
 
 const validation = Yup.object().shape({
     name: Yup.string().required("El nombre es obligatorio."),
@@ -30,7 +29,7 @@ const validation = Yup.object().shape({
 
 const Register: React.FC = () => {
     const { data: session } = useSession();
-    const router: AppRouterInstance = useRouter();
+    const router = useRouter();
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const formRef = useRef<FormikProps<{ name: string, email: string; password: string; }> | null>(null);
@@ -67,8 +66,8 @@ const Register: React.FC = () => {
             if(response.ok) {
                 toast.success("Votre compte a ete creer avec succes.");
             
-                router.push("/signin");
                 router.refresh();
+                router.push("/signin");
             } else {
                 setError(`${user?.message}`);
             }

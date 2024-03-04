@@ -15,7 +15,7 @@ import { ReservationProps } from '@/types/model';
 import HeaderTitle from '@/components/HeaderTitle';
 import { getOneBook } from '@/actions/getOneBook';
 import { sendMail } from '@/libs/sendMail';
-import { convertDate } from '@/utils/convertDate';
+import { convertDate, getDateInfo } from '@/utils/convertDate';
 
 const validation = Yup.object().shape({
     id: Yup.string(),
@@ -72,35 +72,42 @@ const Reservation: React.FC = () => {
             setIsLoading(true);
             values.title = title;
             values.image = image;
+            const { day, month, year } = getDateInfo(values.recuperationDate);
             const convertion = convertDate(values.recuperationDate);
             values.recuperationDate = convertion;
+            const now = Date.now();
+            const date = new Date(now);
 
-            const response = await fetch("/api/reservation", {
-                method: "POST",
-                headers: { "Content-Type": "application/json", },
-                body: JSON.stringify(values)
-            });
-            
-            const user = JSON.parse(await response.json());
-            
-            if(response.ok) {
-                toast.success("Libro reservado exitosamente!");
-
-                await sendMail({
-                    name: session?.user?.name,
-                    email: session?.user?.email,
-                    message: `Su solicitud de reservación a nuestro portal web de la biblioteca ha sido aprobada exitosamente. Has reservado el libre titulado: ${values.title}. Pasa a recuperarlo en esta fecha: ${values.recuperationDate}.`,
-                    subject: "Reservación de libro",
+            if ((day - 3 >= date.getUTCDate()) && (month >= date.getMonth()) && (year >= date.getFullYear())) {
+                const response = await fetch("/api/reservation", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", },
+                    body: JSON.stringify(values)
                 });
             
-                router.refresh();
-                router.push(`/profile/${session?.user?.id}`);
+                const user = JSON.parse(await response.json());
+            
+                if (response.ok) {
+                    toast.success("Libro reservado exitosamente!");
+
+                    await sendMail({
+                        name: session?.user?.name,
+                        email: session?.user?.email,
+                        message: `Su solicitud de reservación a nuestro portal web de la biblioteca ha sido aprobada exitosamente. Has reservado el libre titulado: ${values.title}. Pasa a recuperarlo en esta fecha: ${values.recuperationDate}.`,
+                        subject: "Reservación de libro",
+                    });
+            
+                    router.refresh();
+                    router.push(`/profile/${session?.user?.id}`);
+                } else {
+                    setError(`${user?.message}`);
+                }
             } else {
-                setError(`${user?.message}`);
+                setError("Debes seleccionar una fecha superior a lo de hoy y que sea minimo 3 dias despues");
             }
             
             setIsLoading(false);
-        } catch(error: any) {
+        } catch (error: any) {
             setIsLoading(false);
             setError(`${error}`);
         }

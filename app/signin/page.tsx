@@ -6,8 +6,6 @@ import * as Yup from 'yup';
 import toast, { Toaster } from "react-hot-toast";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { useRouter } from "next/navigation";
 
 import leftImages from '@/public/images/signleft.jpg';
 import AuthSubmitButton from "@/components/AuthSubmitButton";
@@ -17,6 +15,7 @@ import SignLeftInfo from "@/components/SignLeftInfo";
 import Logo from "@/components/Logo";
 import Error from "@/components/Error";
 import ConnectWithGoogle from "@/components/ConnectWithGoogle";
+import { useRouter } from "next/navigation";
 
 const validation = Yup.object().shape({
     email: Yup.string().email('El correo es incorrecto!')
@@ -27,7 +26,7 @@ const validation = Yup.object().shape({
 
 const SignIn: React.FC = () => {
     const { data: session } = useSession();
-    const router: AppRouterInstance = useRouter();
+    const router = useRouter();
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const formRef = useRef<FormikProps<{ email: string; password: string; }> | null>(null);
@@ -56,19 +55,19 @@ const SignIn: React.FC = () => {
             const login = await signIn("credentials", {
                 email: values.email,
                 password: values.password,
-                redirect: false,
+                redirect: true,
             });
 
             if(login?.ok) {
                 toast.success("Has conectado exitosamente.", { duration: 2 });
 
-                router.replace('/');
+                router.push('/');
+                router.refresh();
             } else {
                 setError(`${login?.error}`);
             }
             
             setIsLoading(false);
-            window.location.reload();
         } catch(error) {
             setIsLoading(false);
             setError("Se occurió algo, intenta de nuevo!");

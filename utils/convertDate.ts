@@ -33,3 +33,12 @@ export const convertDate = (value: string): string => {
     
     return fullDate;
 };
+
+export const getDateInfo = (value: string) => {
+    const date = new Date(value);
+    const day = date.getUTCDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+
+    return { day, month, year } as const;
+}

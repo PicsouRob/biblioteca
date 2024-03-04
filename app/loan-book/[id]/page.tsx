@@ -15,7 +15,7 @@ import AuthSubmitButton from '@/components/AuthSubmitButton';
 import HeaderTitle from '@/components/HeaderTitle';
 import { getOneBook } from '@/actions/getOneBook';
 import { sendMail } from '@/libs/sendMail';
-import { convertDate } from '@/utils/convertDate';
+import { convertDate, getDateInfo } from '@/utils/convertDate';
 
 const validation = Yup.object().shape({
     id: Yup.string(),
@@ -29,7 +29,7 @@ const validation = Yup.object().shape({
 
 const LoanBook: React.FC = () => {
     const { data: session }: any = useSession();
-    const router: AppRouterInstance = useRouter();
+    const router = useRouter();
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const formRef = useRef<FormikProps<Loan> | null>(null);
@@ -41,7 +41,7 @@ const LoanBook: React.FC = () => {
         if (!session?.user) {
             router.push("/signin");
         }
-    }, [session, router]);
+    }, [session?.user, router]);
 
     const keyPress = useCallback((event: KeyboardEvent) => {
         if (event.key === "Enter" && formRef?.current) {
@@ -71,35 +71,42 @@ const LoanBook: React.FC = () => {
             setIsLoading(true);
             values.title = title;
             values.image = image;
+            const { day, month, year } = getDateInfo(values.dateReturned);
             const convertion = convertDate(values.dateReturned);
             values.dateReturned = convertion;
-            
-            const response = await fetch("/api/loan", {
-                method: "POST",
-                headers: { "Content-Type": "application/json", },
-                body: JSON.stringify(values)
-            });
-            
-            const user = JSON.parse(await response.json());
-            
-            if(response.ok) {
-                toast.success("Libro prestado exitosamente!");
+            const now = Date.now();
+            const date = new Date(now);
 
-                await sendMail({
-                    name: session.user?.name,
-                    email: session.user?.email,
-                    message: `Su solicitud de préstamo a nuestro portal web de la biblioteca ha sido aprobada exitosamente. Has prestado el libre titulado: ${values.title} hasta ${values.dateReturned}. Puede recoger el libro en recepción y asegurarse de devolverlo a la biblioteca al finalizar este préstamo, por favor.`,
-                    subject: "Prestamo de libro",
+            if ((day - 3 >= date.getUTCDate()) && (month >= date.getMonth()) && (year >= date.getFullYear())) {
+                const response = await fetch("/api/loan", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", },
+                    body: JSON.stringify(values)
                 });
             
-                router.refresh();
-                router.push(`/profile/${session?.user?.id}`);
-            } else {
-                setError(`${user?.message}`);
-            }
+                const user = JSON.parse(await response.json());
             
+                if (response.ok) {
+                    toast.success("Libro prestado exitosamente!");
+
+                    await sendMail({
+                        name: session.user?.name,
+                        email: session.user?.email,
+                        message: `Su solicitud de préstamo a nuestro portal web de la biblioteca ha sido aprobada exitosamente. Has prestado el libre titulado: ${values.title} hasta ${values.dateReturned}. Puede recoger el libro en recepción y asegurarse de devolverlo a la biblioteca al finalizar este préstamo, por favor.`,
+                        subject: "Prestamo de libro",
+                    });
+            
+                    router.refresh();
+                    router.push(`/profile/${session?.user?.id}`);
+                } else {
+                    setError(`${user?.message}`);
+                }
+            } else {
+                setError("Debes seleccionar una fecha superior a lo de hoy y que sea minimo 3 dias despues");
+            }
+              
             setIsLoading(false);
-        } catch(error: any) {
+        } catch (error: any) {
             setIsLoading(false);
             setError(`${error}`);
         }
