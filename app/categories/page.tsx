@@ -1,9 +1,14 @@
+import Categories from '@/components/Categories';
 import React from 'react';
 
-const Categories: React.FC = () => {
+const CategoriesBook: React.FC = () => {
     return (
-        <Categories />
+        <div className="bg-gray-100">
+            <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
+                <Categories />
+            </div>
+        </div>
     );
 }
 
-export default Categories;
+export default CategoriesBook;
