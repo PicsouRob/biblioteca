@@ -40,7 +40,6 @@ const LoanBook: React.FC = () => {
 
     useEffect(() => {
         if (status === "unauthenticated") {
-            window.location.reload();
             router.push("/signin");
         }
     }, [status, router]);

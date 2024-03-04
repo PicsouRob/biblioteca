@@ -6,11 +6,9 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
-import SelectSearchOption from "@/components/SelectSearchOption";
 import library1 from "@/public/images/library.jpg";
 import library2 from "@/public/images/library2.jpg";
 import library3 from "@/public/images/library3.jpg";
-import BookByCategory from "@/components/BookByCategory";
 import Categories from "@/components/Categories";
 import Testimonials from "@/components/Testimonials";
 

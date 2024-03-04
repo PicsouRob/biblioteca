@@ -5,6 +5,7 @@ import library1 from "@/public/images/library.jpg";
 import library2 from "@/public/images/library2.jpg";
 import library3 from "@/public/images/library3.jpg";
 import library4 from "@/public/images/signleft.jpg";
+import ContactInfo from '@/components/ContactInfo';
 
 const About: React.FC = () => {
   return (
@@ -49,6 +50,10 @@ const About: React.FC = () => {
           </div>
         </div>
     
+        <div className="py-12 space-y-4">
+          <h1 className="text-2xl lg:text-3xl font-bold">Contacta con nosotras</h1>
+          <ContactInfo />
+        </div>
       </div>
     </div>
   );
