@@ -41,10 +41,10 @@ const SignIn: React.FC = () => {
     useEffect(() => {
         if (session?.user) {
             window.location.reload();
-            
+
             router.push("/");
         }
-    }, [session, router]);
+    }, [session?.user, router]);
 
     useEffect(() => {
         document.addEventListener('keypress', keyPress);
