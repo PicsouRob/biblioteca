@@ -14,16 +14,16 @@ import UserLoanBook from "@/components/UserLoanBook";
 import UserReservedBook from "@/components/UserReservedBook";
 
 const UserProfile: React.FC = () => {
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
     const { id }: Params = useParams();
     const router: AppRouterInstance = useRouter();
     const [optionSelected, setOptionSelected] = useState<number>(0);
 
     useEffect(() => {
-        if (status === "unauthenticated") {
+        if (!session?.user) {
             router.push("/signin");
         }
-    }, [status, router]);
+    }, [session?.user, router]);
 
     const deleteAccount = () => {
         try {

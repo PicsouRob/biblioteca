@@ -28,7 +28,7 @@ const validation = Yup.object().shape({
 });
 
 const LoanBook: React.FC = () => {
-    const { data }: any = useSession();
+    const { data: session }: any = useSession();
     const router: AppRouterInstance = useRouter();
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -36,13 +36,12 @@ const LoanBook: React.FC = () => {
     const [title, setTitle] = useState<string>('');
     const [image, setImage] = useState<string>('');
     const { id } = useParams();
-    const { status } = useSession();
 
     useEffect(() => {
-        if (status === "unauthenticated") {
+        if (!session?.user) {
             router.push("/signin");
         }
-    }, [status, router]);
+    }, [session, router]);
 
     const keyPress = useCallback((event: KeyboardEvent) => {
         if (event.key === "Enter" && formRef?.current) {
@@ -87,14 +86,14 @@ const LoanBook: React.FC = () => {
                 toast.success("Libro prestado exitosamente!");
 
                 await sendMail({
-                    name: data.user?.name,
-                    email: data.user?.email,
+                    name: session.user?.name,
+                    email: session.user?.email,
                     message: `Su solicitud de préstamo a nuestro portal web de la biblioteca ha sido aprobada exitosamente. Has prestado el libre titulado: ${values.title} hasta ${values.dateReturned}. Puede recoger el libro en recepción y asegurarse de devolverlo a la biblioteca al finalizar este préstamo, por favor.`,
                     subject: "Prestamo de libro",
                 });
             
                 router.refresh();
-                router.push(`/profile/${data?.user?.id}`);
+                router.push(`/profile/${session?.user?.id}`);
             } else {
                 setError(`${user?.message}`);
             }
@@ -118,7 +117,7 @@ const LoanBook: React.FC = () => {
                     <Formik
                         initialValues={{
                             id: 'kjkjj', title, image,
-                            userId: data?.user?.id!, bookId: id.toString(), comment: '', dateReturned: '',
+                            userId: session?.user?.id!, bookId: id.toString(), comment: '', dateReturned: '',
                         }}
                         validationSchema={validation}
                         onSubmit={(values) => handleSubmitForm(values)}

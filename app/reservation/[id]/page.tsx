@@ -28,7 +28,7 @@ const validation = Yup.object().shape({
 });
 
 const Reservation: React.FC = () => {
-    const { data, status }: any = useSession();
+    const { data: session, status }: any = useSession();
     const router: AppRouterInstance = useRouter();
     const [title, setTitle] = useState<string>('');
     const [image, setImage] = useState<string>('');
@@ -38,10 +38,11 @@ const Reservation: React.FC = () => {
     const { id } = useParams();
 
     useEffect(() => {
-        if (status === "unauthenticated") {
+        if (!session?.user) {
+            
             router.push("/signin");
         }
-    }, [status, router]);
+    }, [session, router]);
 
     const keyPress = useCallback((event: KeyboardEvent) => {
         if (event.key === "Enter" && formRef?.current) {
@@ -86,14 +87,14 @@ const Reservation: React.FC = () => {
                 toast.success("Libro reservado exitosamente!");
 
                 await sendMail({
-                    name: data?.user?.name,
-                    email: data?.user?.email,
+                    name: session?.user?.name,
+                    email: session?.user?.email,
                     message: `Su solicitud de reservación a nuestro portal web de la biblioteca ha sido aprobada exitosamente. Has reservado el libre titulado: ${values.title}. Pasa a recuperarlo en esta fecha: ${values.recuperationDate}.`,
                     subject: "Reservación de libro",
                 });
             
                 router.refresh();
-                router.push(`/profile/${data?.user?.id}`);
+                router.push(`/profile/${session?.user?.id}`);
             } else {
                 setError(`${user?.message}`);
             }
@@ -116,7 +117,7 @@ const Reservation: React.FC = () => {
                 <div className="relative px-4 py-6 sm:px-6 z-50 mx-auto lg:px-8 max-w-7xl sm:max-w-4xl lg:max-w-3xl space-y-10 bg-white -mt-8 lg:-mt-12 rounded-lg">
                     <Formik
                         initialValues={{
-                            id: '', title: '', image: '', userId: data?.user?.id!, bookId: id.toString(), comment: '', recuperationDate: '',
+                            id: '', title: '', image: '', userId: session?.user?.id!, bookId: id.toString(), comment: '', recuperationDate: '',
                         }}
                         validationSchema={validation}
                         onSubmit={(values) => handleSubmitForm(values)}

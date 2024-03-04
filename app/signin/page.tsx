@@ -26,7 +26,7 @@ const validation = Yup.object().shape({
 });
 
 const SignIn: React.FC = () => {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const router: AppRouterInstance = useRouter();
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -40,9 +40,11 @@ const SignIn: React.FC = () => {
     
     useEffect(() => {
         if (session?.user) {
+            window.location.reload();
+
             router.push("/");
         }
-    }, [session?.user, router]);
+    }, [session, router]);
 
     useEffect(() => {
         document.addEventListener('keypress', keyPress);
@@ -62,7 +64,8 @@ const SignIn: React.FC = () => {
             if(login?.ok) {
                 toast.success("Has conectado exitosamente.", { duration: 2 });
 
-                window.location.reload();
+                // window.location.reload();
+                router.refresh();
                 router.push("/");
             } else {
                 setError(`${login?.error}`);

@@ -12,6 +12,7 @@ import { UserIcon } from "@heroicons/react/24/outline";
 const Header: React.FC = () => {
     const show: boolean = useShowContent();
     const { data }: any = useSession();
+    console.log({data});
 
     return (
         <div className="">
