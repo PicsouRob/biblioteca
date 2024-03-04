@@ -62,13 +62,13 @@ const SignIn: React.FC = () => {
             if(login?.ok) {
                 toast.success("Has conectado exitosamente.", { duration: 2 });
 
-                window.location.reload();
-                router.push("/");
+                router.replace('/');
             } else {
                 setError(`${login?.error}`);
             }
             
             setIsLoading(false);
+            window.location.reload();
         } catch(error) {
             setIsLoading(false);
             setError("Se occurió algo, intenta de nuevo!");

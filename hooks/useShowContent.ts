@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export const useShowContent = (): boolean => {
     const [show, setShow] = useState<boolean>(true);
+     const router: AppRouterInstance = useRouter();
     const pathname = usePathname();
 
     useEffect(() => {
@@ -13,7 +15,7 @@ export const useShowContent = (): boolean => {
         if(pagesExcluded.includes(pathname)) {
             setShow(false);
         }
-    }, [pathname]);
+    }, [pathname, router]);
 
     return show;
 }
