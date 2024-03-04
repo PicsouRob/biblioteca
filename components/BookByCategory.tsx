@@ -9,7 +9,6 @@ interface BookByCategoryProps {
 }
 
 const BookByCategory: React.FC<BookByCategoryProps> = ({ category }) => {
-    const generatedArray = Array.from({ length: 6 }, (_, ind) => ind + 1);
     const [findedBook, setFindedBook] = useState<any[]>([]);
 
     useEffect(() => {
@@ -31,19 +30,11 @@ const BookByCategory: React.FC<BookByCategoryProps> = ({ category }) => {
             </div>
 
             <div className="">
-                {!findedBook ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
-                        {generatedArray.map((_, ind) => (
-                            <div key={ind} className="skeleton w-full h-full"></div>
-                        ))}
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
-                        {findedBook.slice(0, 6).map((data, index) => (
-                            <Book key={index} bookInfo={data} />
-                        ))}
-                    </div>
-                )}
+                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
+                    {findedBook.slice(0, 6).map((data, index) => (
+                        <Book key={index} bookInfo={data} />
+                    ))}
+                </div>
             </div>
         </div>
     );

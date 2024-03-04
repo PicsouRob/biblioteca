@@ -28,7 +28,7 @@ const validation = Yup.object().shape({
 });
 
 const Reservation: React.FC = () => {
-    const { data }: any = useSession();
+    const { data, status }: any = useSession();
     const router: AppRouterInstance = useRouter();
     const [title, setTitle] = useState<string>('');
     const [image, setImage] = useState<string>('');
@@ -36,6 +36,13 @@ const Reservation: React.FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const formRef = useRef<FormikProps<ReservationProps> | null>(null);
     const { id } = useParams();
+
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            window.location.reload();
+            router.push("/signin");
+        }
+    }, [status, router]);
 
     const keyPress = useCallback((event: KeyboardEvent) => {
         if (event.key === "Enter" && formRef?.current) {

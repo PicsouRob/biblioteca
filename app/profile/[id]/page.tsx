@@ -1,23 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 import avatar from "@/public/images/profile-avatar.png";
 import { profileOptions } from "@/utils/profileData";
-import EmptyView from "@/components/EmptyView";
 import UserLoanBook from "@/components/UserLoanBook";
-import { userLoanBook } from "@/actions/userLoanBook";
 import UserReservedBook from "@/components/UserReservedBook";
 
 const UserProfile: React.FC = () => {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const { id }: Params = useParams();
+    const router: AppRouterInstance = useRouter();
     const [optionSelected, setOptionSelected] = useState<number>(0);
+
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            window.location.reload();
+            router.push("/signin");
+        }
+    }, [status, router]);
 
     const deleteAccount = () => {
         try {

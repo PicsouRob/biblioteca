@@ -36,6 +36,14 @@ const LoanBook: React.FC = () => {
     const [title, setTitle] = useState<string>('');
     const [image, setImage] = useState<string>('');
     const { id } = useParams();
+    const { status } = useSession();
+
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            window.location.reload();
+            router.push("/signin");
+        }
+    }, [status, router]);
 
     const keyPress = useCallback((event: KeyboardEvent) => {
         if (event.key === "Enter" && formRef?.current) {
