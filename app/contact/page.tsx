@@ -1,17 +1,17 @@
 "use client";
 
-import AuthSubmitButton from "@/components/AuthSubmitButton";
-import ContactInfo from "@/components/ContactInfo";
+import { useRef, useState } from "react";
 import { Formik, FormikProps } from "formik";
 import Link from "next/link";
-import { useRef, useState } from "react";
 import * as Yup from 'yup';
 
+import ContactInfo from "@/components/ContactInfo";
+
 const validation = Yup.object().shape({
-    email: Yup.string().email('El nombre es incorrecto!')
+    email: Yup.string().email('El correo es incorrecto!')
         .required("El correo es obligatorio."),
     message: Yup.string().required("El mensage es obligatorio."),
-    phone: Yup.string().required("El telefono es obligatorio."),
+    phone: Yup.number().min(10, "El numero debe ser por lo menos 10 cifras").required("El telefono es obligatorio."),
     name: Yup.string().required("El nombre es obligatorio")
 });
 
@@ -63,7 +63,7 @@ const Contact: React.FC = () => {
                                             <div>
                                                 <label htmlFor="" className="text-base font-medium text-gray-900"> Nombre completo </label>
                                                 <div className="mt-2.5 relative">
-                                                    <input onChange={handleChange} value={values.name} type="text" name="name" id="" placeholder="Enter your full name" className="block w-full px-4 py-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600" />
+                                                    <input onChange={handleChange} value={values.name} type="text" name="name" id="" placeholder="Entra tu nombre" className="block w-full px-4 py-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600" />
                                                 </div>
                                                 {touched.name && errors.name && (
                                                     <p className="text-red-700">{errors.name}</p>
@@ -73,7 +73,7 @@ const Contact: React.FC = () => {
                                             <div>
                                                 <label htmlFor="" className="text-base font-medium text-gray-900"> Correo electronico </label>
                                                 <div className="mt-2.5 relative">
-                                                    <input onChange={handleChange} value={values.email} type="email" name="email" id="" placeholder="Enter your full name" className="block w-full px-4 py-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600" />
+                                                    <input onChange={handleChange} value={values.email} type="email" name="email" id="" placeholder="Entra su correo electronico" className="block w-full px-4 py-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600" />
                                                 </div>
                                                 {touched.email && errors.email && (
                                                     <p className="text-red-700">{errors.email}</p>
@@ -83,7 +83,7 @@ const Contact: React.FC = () => {
                                             <div>
                                                 <label htmlFor="" className="text-base font-medium text-gray-900"> Telefono </label>
                                                 <div className="mt-2.5 relative">
-                                                    <input onChange={handleChange} value={values.phone} type="tel" name="phone" id="" placeholder="Enter your full name" className="block w-full px-4 py-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600" />
+                                                    <input onChange={handleChange} value={values.phone} type="number" name="phone" id="" placeholder="Entra tu numero de telefono" className="block w-full px-4 py-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md focus:outline-none focus:border-blue-600 caret-blue-600" />
                                                 </div>
                                                 {touched.phone && errors.phone && (
                                                     <p className="text-red-700">{errors.phone}</p>
@@ -93,7 +93,7 @@ const Contact: React.FC = () => {
                                             <div className="sm:col-span-2">
                                                 <label htmlFor="" className="text-base font-medium text-gray-900"> Message </label>
                                                 <div className="mt-2.5 relative">
-                                                    <textarea onChange={handleChange} value={values.message} name="message" id="" placeholder="" className="block w-full px-4 py-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md resize-y focus:outline-none focus:border-blue-600 caret-blue-600" rows={4}></textarea>
+                                                    <textarea onChange={handleChange} value={values.message} name="message" id="" placeholder="Escribe el mensage" className="block w-full px-4 py-4 text-black placeholder-gray-500 transition-all duration-200 bg-white border border-gray-200 rounded-md resize-y focus:outline-none focus:border-blue-600 caret-blue-600" rows={4}></textarea>
                                                 </div>
                                                 {touched.message && errors.message && (
                                                     <p className="text-red-700">{errors.message}</p>

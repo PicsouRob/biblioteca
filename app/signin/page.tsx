@@ -55,13 +55,14 @@ const SignIn: React.FC = () => {
             const login = await signIn("credentials", {
                 email: values.email,
                 password: values.password,
-                redirect: true,
+                redirect: false,
             });
 
             if(login?.ok) {
-                toast.success("Has conectado exitosamente.", { duration: 2 });
+                toast.success("Has conectado exitosamente.");
 
                 router.push('/');
+                window.location.reload();
                 router.refresh();
             } else {
                 setError(`${login?.error}`);

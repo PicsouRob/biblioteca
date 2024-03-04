@@ -12,9 +12,10 @@ import avatar from "@/public/images/profile-avatar.png";
 import { profileOptions } from "@/utils/profileData";
 import UserLoanBook from "@/components/UserLoanBook";
 import UserReservedBook from "@/components/UserReservedBook";
+import toast, { Toaster } from "react-hot-toast";
 
 const UserProfile: React.FC = () => {
-    const { data: session } = useSession();
+    const { data: session }: any = useSession();
     const { id }: Params = useParams();
     const router: AppRouterInstance = useRouter();
     const [optionSelected, setOptionSelected] = useState<number>(0);
@@ -25,16 +26,30 @@ const UserProfile: React.FC = () => {
         }
     }, [session?.user, router]);
 
-    const deleteAccount = () => {
+    const deleteAccount = async () => {
         try {
+            const response = await fetch(`/api/delete/user?userId=${session?.user?.id}`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json", },
+            });
             
-        } catch (error) {
+            const deleteMessage = JSON.parse(await response.json());
             
+            if(response.ok) {
+                toast.success("Su cuenta ha sido borrado exitosamente.");
+            
+                await signOut();
+            } else {
+                toast.error(deleteMessage.message);
+            }
+        } catch (error: any) {
+            toast.error(error.message);
         }
-    }
+    };
 
     return (
         <div className="bg-gray-100 text-primary">
+            <Toaster />
             <div className="max-w-7xl h-full px-6 lg:px-8 mx-auto min-h-screen py-12">
                 <div className="relative flex flex-col w-full min-w-0 mb-6 break-words border-2 border-dashed bg-clip-border rounded-2xl border-stone-200 bg-light/30 draggable">
                     <div className="px-9 pt-9 flex-auto min-h-[70px] pb-0 bg-transparent">

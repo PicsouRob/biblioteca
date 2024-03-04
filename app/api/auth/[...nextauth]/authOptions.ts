@@ -65,6 +65,7 @@ export const authOptions: NextAuthOptions = {
                     return { ...userWithoutPassword, jwtUserId };
                 } catch (error: any) {
                     console.log(`${error.message}`);
+                    
                     throw new Error(error.message);
                 }
             },

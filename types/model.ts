@@ -1,5 +1,3 @@
-import { boolean } from "yup";
-
 export type User = {
     id: string;
     name: string;
