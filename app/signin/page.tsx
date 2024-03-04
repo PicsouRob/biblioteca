@@ -26,7 +26,7 @@ const validation = Yup.object().shape({
 });
 
 const SignIn: React.FC = () => {
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
     const router: AppRouterInstance = useRouter();
     const [error, setError] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -62,8 +62,7 @@ const SignIn: React.FC = () => {
             if(login?.ok) {
                 toast.success("Has conectado exitosamente.", { duration: 2 });
 
-                // window.location.reload();
-                router.refresh();
+                window.location.reload();
                 router.push("/");
             } else {
                 setError(`${login?.error}`);
